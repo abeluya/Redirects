@@ -1,4 +1,3 @@
-<<<<<<< HEAD:Redirects/MainGui.cs
 ﻿/*
  * Created by Abraham Oviedo
  * GAP
@@ -838,7 +837,7 @@ namespace Redirects
         }
     }
 }
-=======
+/*
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -1391,7 +1390,7 @@ namespace Redirects
         private void StartProcess()
         {
             
-            /*Reset progress bar*/
+            //Reset progress bar
             ModifyProgressBarColor.SetState(this.pgrBar, 1);
             this.pgrBar.Step = 1;
             this.pgrBar.Minimum = 1;
@@ -1694,4 +1693,4 @@ namespace Redirects
         }
     }
 }
->>>>>>> master:Redirects/Form1.cs
+*/
