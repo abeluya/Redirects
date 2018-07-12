@@ -1,5 +1,9 @@
-<<<<<<< HEAD:Redirects/MainGui.Designer.cs
-﻿namespace Redirects
+/*
+* Created by Abraham Oviedo
+* GAP
+* April, 2018
+*/
+namespace Redirects
 {
     partial class frmMain
     {
@@ -391,7 +395,7 @@
     }
 }
 
-=======
+/*
 ﻿namespace Redirects
 {
     partial class frmMain
@@ -815,5 +819,4 @@
         private System.Windows.Forms.Label lblLoading;
     }
 }
-
->>>>>>> master:Redirects/Form1.Designer.cs
+*/
