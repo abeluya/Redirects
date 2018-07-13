@@ -1,0 +1,27 @@
+# Compiled class file
+*.class
+
+# Screenshots Folder
+src/main/resources/screenshots
+*.jpg
+
+
+# Log file
+*.log
+
+# Package Files #
+*.xls*
+
+
+
+#Other Files
+
+
+# Paths
+Build/
+.vs/
+packages/
+Redirects/bin/Debug
+Redirects/Redirects/obj
+
+
