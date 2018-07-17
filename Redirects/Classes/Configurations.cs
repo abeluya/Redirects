@@ -33,9 +33,10 @@ namespace Redirects
 
         public Configurations() //Default constructor
         {
-            var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.System);
+            /*var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.System);
             this.hostsPath = Path.Combine(systemPath, @"drivers\etc\hosts");
-            this.stagingIp = "http://www.solarwinds.com-v1.edgekey-staging.net";
+            this.stagingIp = "http://www.solarwinds.com-v1.edgekey-staging.net";*/
+            this.ReadConfig();
 
         }
 
@@ -46,5 +47,23 @@ namespace Redirects
         }
 
         //Constructors end
+        // Methods 
+        public void ReadConfig() //Reads config file from config flie
+        {
+            string path = ".\\config.cfg";
+            try
+            {   
+                string[] lines = File.ReadAllLines(path); //Reads the file and create an array
+                this.hostsPath = lines[0];
+                this.stagingIp = lines[1];
+            }
+            catch (System.Exception)
+            {
+                this.hostsPath = "Check config file";
+                this.stagingIp = "Error";
+            }
+        }
+        // Methods end 
+
     }
 }
