@@ -79,7 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ChromeDriver.cs" />
-    <Compile Include="Classes\FirefoxDriver.cs" />
+    <Compile Include="Classes\Configurations.cs" />
     <Compile Include="Forms\MainGui.cs">
       <SubType>Form</SubType>
     </Compile>
