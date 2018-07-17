@@ -1,29 +1,32 @@
-﻿using System;
+﻿/*
+ * Created by Abraham Oviedo
+ * April, 2018
+ */
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
 
 namespace Redirects
 {
-    class FDriver
+    class CDriver
     {
-        FirefoxDriver driver = new FirefoxDriver();
-        private List<Redirect> list = new List<Redirect>(); //Stores the list URLs
-        private frmMain form;
-
-        public FDriver()
+        private IWebDriver driver = new ChromeDriver();
+        private List<Redirect> list = new List<Redirect>(); //Stores the list of URLs
+        public CDriver()
         {
             this.List = null;
         }
 
-        public FDriver(List<Redirect> list, frmMain form)
+        public CDriver(List<Redirect> list)
         {
             this.List = list;
-            this.form = form;
         }
 
         public List<Redirect> CheckUrls()
@@ -37,7 +40,6 @@ namespace Redirects
                 Console.WriteLine("Destiny: " + this.List[i].Destiny);
                 Console.WriteLine("Server Destiny: " + this.List[i].ServerDestiny);
                 Console.WriteLine("Response: " + this.List[i].Response);
-                this.form.UpdatePgrBar();
 
             }
 
@@ -46,15 +48,14 @@ namespace Redirects
             return this.List;
         }
 
- 
 
-        public List<Redirect> List
+        public List<Redirect> List 
         {
             get { return this.list; }
             set { this.list = value; }
         }
 
-        public FirefoxDriver Driver
+        public IWebDriver Driver
         {
             get { return this.driver; }
             set { this.driver = value; }
