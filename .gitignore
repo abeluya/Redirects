@@ -1,26 +1,22 @@
-# Compiled class file
-
-# Screenshots Folder
-src/main/resources/screenshots
-*.jpg
-
-
 # Log file
 *.log
 
-# Package Files #
+# Files #
 *.xls*
-
-
-
-#Other Files
-
+*.exe
+*.cache
+*.resources
+*.pdb
+*.CopyComplete
+*.cs
+*.dll
+*.txt
 
 # Paths
 Build/
 .vs/
 packages/
-Redirects/bin/Debug
-Redirects/Redirects/obj
+Redirects/bin/Debug/
+Redirects/Redirects/obj/
 
 

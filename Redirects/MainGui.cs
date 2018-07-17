@@ -1,6 +1,5 @@
 ﻿/*
  * Created by Abraham Oviedo
- * GAP
  * April, 2018
  */
 

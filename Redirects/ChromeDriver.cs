@@ -1,4 +1,8 @@
-﻿using OpenQA.Selenium;
+﻿/*
+ * Created by Abraham Oviedo
+ * April, 2018
+ */
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
