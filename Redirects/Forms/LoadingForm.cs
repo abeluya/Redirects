@@ -17,11 +17,16 @@ namespace Redirects
 {
     public partial class LoadingForm : Form
     {
+        //Constructor begin
 
         public LoadingForm()
         {
             InitializeComponent();
         }
+
+        //Constructor end
+
+        //Method begin
 
         public LoadingForm(bool hide, bool browser)
         {
@@ -44,9 +49,8 @@ namespace Redirects
             {
                 this.pgrBar.Visible = true;
             }
-            
-
         }
 
+        //Methods end
     }
 }
