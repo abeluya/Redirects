@@ -28,10 +28,12 @@ namespace Redirects
 {
     public partial class frmMain : Form
     {
+
+        //Variables begin
+
         private Configurations config = new Configurations();
-        private string path = "C:\\Windows\\System32\\Drivers\\etc\\host";
-        string[] split;
-        private List<Redirect> list = new List<Redirect>(); //Stores the list URLs
+        private string[] split;
+        private List<Redirect> list = new List<Redirect>(); //Stores the list of URLs
         private bool permanentRedirect = true;
         private int response = 301;
         private bool passed = true;
@@ -40,24 +42,21 @@ namespace Redirects
         private bool redirectsLoaded = false; //True only when the redirects are properly loaded
         private LoadingForm loading;
 
+        //Variables end
+
+        //Constructors begin
         public frmMain()
         {
             InitializeComponent();
             this.txtIp.Text = this.GetIP(this.config.StagingIp); //Get IP of staging server
             
         }
+        //Contructors end
 
-        private void btnLoad_Click(object sender, EventArgs e)
-        {
-            this.dialogOpenFile.ShowDialog();
-            path = this.dialogOpenFile.FileName;
-            Console.WriteLine(this.path);
-            this.LoadCSV();
-        }
-
+        //Methods begin
         private void LoadCSV() //Not working at the moment
         {
-            var reader = new StreamReader(File.OpenRead(path));
+            var reader = new StreamReader(File.OpenRead(this.config.FilePath));
             List<string> searchList = new List<string>();
             while (!reader.EndOfStream)
             {
@@ -68,7 +67,7 @@ namespace Redirects
             foreach (string line in searchList)
             {
                 split = line.Split(',');
-                Console.WriteLine(split[split.Length-1]);
+                Console.WriteLine(split[split.Length - 1]);
                 this.dataGridLista.Rows.Add(split[1], split[10], split[11]);
             }
         }
@@ -83,14 +82,14 @@ namespace Redirects
                 {
                     split = Regex.Split(Clipboard.GetText(TextDataFormat.Text), "\r\n");
                 });
-                
+
                 foreach (string i in split)
                 {
                     if (i.Length > 1)
                     {
                         string[] test;
                         test = i.Split('\t');
-                        Console.WriteLine("Origen: {0}\nDestino: {1}", test[0], test[test.Length - 1]);
+                        Console.WriteLine("Origin: {0}\nDestino: {1}", test[0], test[test.Length - 1]);
 
                         if (test[0].Contains("https://"))
                         {
@@ -108,8 +107,8 @@ namespace Redirects
                             }
                         }
                     }
-                    
-                    
+
+
                 }
                 return true;
             }
@@ -169,26 +168,22 @@ namespace Redirects
                     this.list[i].Response = 404;
                 }
                 this.UpdatePgrBar();
-                
+
             }
         }
 
 
         private void CompareURL() //Compares the destiny URL with the actual URL of the httpResponse
         {
-
             HttpWebRequest myHttpWebRequest;
             HttpWebResponse myHttpWebResponse;
-
-    
-
-                for (int i = 0; i < this.list.Count; i++)
-                {
+            for (int i = 0; i < this.list.Count; i++)
+            {
 
                 try
                 {
                     Console.WriteLine(this.list[i].Response);
-                    if ((this.list[i].Response == 301)|| (this.list[i].Response == 302))
+                    if ((this.list[i].Response == 301) || (this.list[i].Response == 302))
                     {
                         myHttpWebRequest = (HttpWebRequest)WebRequest.Create(this.list[i].Origin);  //Sends origin URL
                         myHttpWebRequest.Timeout = 1000;
@@ -198,10 +193,6 @@ namespace Redirects
                         {
                             myHttpWebRequest.Headers["v2header"] = "true";
                         }
-                        
-
-
-
                         myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();    // Gets a response URL based on the origin URL
                         Console.WriteLine(myHttpWebResponse.StatusCode);
 
@@ -232,7 +223,7 @@ namespace Redirects
                         });
                         Console.WriteLine("Origin: " + this.GetIP(this.list[i].Origin));
                         Console.WriteLine("Destiny: " + this.GetIP(this.list[i].Destiny));
-                        Console.WriteLine("Origen> {0}", this.list[i].Origin);
+                        Console.WriteLine("Origin> {0}", this.list[i].Origin);
                         Console.WriteLine(this.list[i].Response);
                         Console.WriteLine("Destiny {0}\nPassed? {1}", myHttpWebResponse.ResponseUri, this.list[i].Passed);
                         myHttpWebResponse.Close();
@@ -258,7 +249,7 @@ namespace Redirects
                         this.passed = false;
 
                     }
-                    
+
                     this.UpdatePgrBar();
 
                 }
@@ -300,17 +291,14 @@ namespace Redirects
         {
             this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
             {
-                //this.pgrBar.PerformStep();
                 this.loading.pgrBar.PerformStep();
             });
-            
+
         }
         private bool WriteHosts()
         {
             try
             {
-                /*var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.System);
-                var path = Path.Combine(systemPath, @"drivers\etc\hosts");*/
                 Console.WriteLine(this.config.HostsPath);
                 using (StreamWriter stream = new StreamWriter(this.config.HostsPath, true, Encoding.Default))
                 {
@@ -321,7 +309,7 @@ namespace Redirects
             }
             catch (System.UnauthorizedAccessException e)
             {
-                Console.WriteLine(e); 
+                Console.WriteLine(e);
                 this.DialogMessage("Unable to write the hosts file", "ERROR MESSAGE", 0);
                 return false;
             }
@@ -345,8 +333,6 @@ namespace Redirects
         private void DeleteLastLine()
         {
 
-            /*var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.System);
-            var path = Path.Combine(systemPath, @"drivers\etc\hosts");*/
             Console.WriteLine(this.config.HostsPath);
             List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
 
@@ -362,7 +348,7 @@ namespace Redirects
                 Uri myUri = new Uri(Url); //Obtains URL
                 Console.WriteLine(myUri.Host);
                 return myUri.Host.ToString();
-                
+
             }
             catch (System.Exception e)
             {
@@ -379,15 +365,15 @@ namespace Redirects
             {
                 if (r.Response != 0)
                 {
-                    this.dataGridLista.Rows.Add(r.Origin, r.Destiny, "Response code " + r.Response.ToString() + ": " + r.Result+".");
+                    this.dataGridLista.Rows.Add(r.Origin, r.Destiny, "Response code " + r.Response.ToString() + ": " + r.Result + ".");
                 }
                 else
                 {
                     this.dataGridLista.Rows.Add(r.Origin, r.Destiny, "");
                 }
-                
+
                 switch (r.Passed)
-                { 
+                {
                     case 0: //Red text in Status field
                         this.dataGridLista.Rows[dataGridLista.RowCount - 1].Cells["status"].Style = new DataGridViewCellStyle { ForeColor = Color.Red };
                         break;
@@ -395,12 +381,12 @@ namespace Redirects
                         this.dataGridLista.Rows[dataGridLista.RowCount - 1].Cells["status"].Style = new DataGridViewCellStyle { ForeColor = Color.Green };
                         break;
                     case 2:
-                        this.dataGridLista.Rows[dataGridLista.RowCount - 1].Cells["status"].Style = new DataGridViewCellStyle { ForeColor = Color.Orange};
+                        this.dataGridLista.Rows[dataGridLista.RowCount - 1].Cells["status"].Style = new DataGridViewCellStyle { ForeColor = Color.Orange };
                         break;
                     default:
                         break;
-                }   
-                
+                }
+
             }
         }
 
@@ -424,39 +410,6 @@ namespace Redirects
 
         }
 
-        private void txtClipboard_Click(object sender, EventArgs e)
-        {
-            this.LoadingPanel(true, false); //Hide browser label and progress bar
-            this.bgrwCopy.RunWorkerAsync();
-        }
-
-        private void radioPermanent_CheckedChanged(object sender, EventArgs e)
-        {
-            this.permanentRedirect = true;
-            this.response = 301;
-            Console.WriteLine(this.permanentRedirect);
-        }
-
-        private void radioTemporary_CheckedChanged(object sender, EventArgs e)
-        {
-            this.permanentRedirect = false;
-            this.response = 302;
-            Console.WriteLine(this.permanentRedirect);
-        }
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            if (this.redirectsLoaded)
-            {
-                this.StartProcess();
-            }
-            else
-            {
-                this.DialogMessage("Please load the redirects first.", "ERROR", 1);
-            }
-        }
-
-        
         private string GetResult(string strIPAddress, string strHostName)
         {
             var request = (HttpWebRequest)WebRequest.Create("http://" + strIPAddress);
@@ -479,15 +432,9 @@ namespace Redirects
             response.Close();
             return responseFromServer;
         }
-        
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void StartProcess()
         {
-      
+
             this.passed = true;
 
             for (int i = 0; i < this.list.Count; i++) //Set all redirects to false in order to compare
@@ -507,7 +454,7 @@ namespace Redirects
                 {
                     this.WriteHosts();
                 }
-                            
+
             }
             this.Enabled = false;
             this.LoadingPanel(false, this.chkBrowser.Checked); //don't hide browser label
@@ -515,7 +462,7 @@ namespace Redirects
             this.loading.pgrBar.Value = 0;
             this.loading.pgrBar.Minimum = 0;
             this.loading.pgrBar.Maximum = this.list.Count * 3;
-            
+
             this.brgwLoading.RunWorkerAsync(); //Start checking URLs in the background worker
         }
 
@@ -530,7 +477,7 @@ namespace Redirects
                     Uri myUri = new Uri(this.list[i].Origin);
                     myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
                     myHttpWebRequest.AllowAutoRedirect = false;
-                    myHttpWebRequest.UserAgent = ".NET Framework Test Client"; 
+                    myHttpWebRequest.UserAgent = ".NET Framework Test Client";
                     myHttpWebRequest.Timeout = 3000;
                     myHttpWebRequest.ReadWriteTimeout = 3000;
                     if (this.chkV2.Checked)
@@ -592,7 +539,7 @@ namespace Redirects
                         {
                             ModifyProgressBarColor.SetState(this.loading.pgrBar, 2); //Changes progress bar to red
                         });
-                        
+
                         this.passed = false;
 
                     }
@@ -632,10 +579,9 @@ namespace Redirects
             {
                 this.loading.lblStatus.Text = "Checking URLs";
             });
-            var driverService = ChromeDriverService.CreateDefaultService();  
-            driverService.HideCommandPromptWindow = true;
-            //Initialices Chrome driver on background
-            ChromeOptions option = new ChromeOptions();
+            var driverService = ChromeDriverService.CreateDefaultService();
+            driverService.HideCommandPromptWindow = true; //Initialices Chrome driver on background
+            ChromeOptions option = new ChromeOptions(); 
 
             if (this.chkBrowser.Checked)
                 option.AddArgument("--start-maximized"); //Show Browser
@@ -688,7 +634,7 @@ namespace Redirects
             }
         }
 
-        private void LoadingPanel( bool hidePgr, bool hideBrowser)
+        private void LoadingPanel(bool hidePgr, bool hideBrowser)
         {
             this.loading = new LoadingForm(hidePgr, hideBrowser);
             this.loading.Enabled = true;
@@ -699,7 +645,7 @@ namespace Redirects
             Application.DoEvents();
 
         }
-        
+
         private void HidePanel()
         {
             this.loading.Close();
@@ -711,7 +657,7 @@ namespace Redirects
             {
                 if (this.ClipBoardLoad())
                 {
-                    
+
                     Console.WriteLine(this.list.Count);
                     this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
                     {
@@ -752,6 +698,55 @@ namespace Redirects
 
         }
 
+        //Methods end
+
+        // Events begin
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            this.dialogOpenFile.ShowDialog();
+            this.config.FilePath = this.dialogOpenFile.FileName;
+            Console.WriteLine(this.config.FilePath);
+            this.LoadCSV();
+        }
+
+        private void txtClipboard_Click(object sender, EventArgs e)
+        {
+            this.LoadingPanel(true, false); //Hide browser label and progress bar
+            this.bgrwCopy.RunWorkerAsync();
+        }
+
+        private void radioPermanent_CheckedChanged(object sender, EventArgs e)
+        {
+            this.permanentRedirect = true;
+            this.response = 301;
+            Console.WriteLine(this.permanentRedirect);
+        }
+
+        private void radioTemporary_CheckedChanged(object sender, EventArgs e)
+        {
+            this.permanentRedirect = false;
+            this.response = 302;
+            Console.WriteLine(this.permanentRedirect);
+        }
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            if (this.redirectsLoaded)
+            {
+                this.StartProcess();
+            }
+            else
+            {
+                this.DialogMessage("Please load the redirects first.", "ERROR", 1);
+            }
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void brgwLoading_DoWork(object sender, DoWorkEventArgs e) //Check the URLs in a background worker
         {
             this.GetResponse();
@@ -774,7 +769,7 @@ namespace Redirects
                 this.FillGrid();
                 this.HidePanel();
                 this.Enabled = true;
-            
+
                 //Brings form to the front
                 if (this.WindowState == FormWindowState.Minimized)
                     this.WindowState = FormWindowState.Normal;
@@ -787,11 +782,11 @@ namespace Redirects
                 this.TopMost = false;
                 //Brings form to the front
             });
-            
+
 
 
         }
-         
+
         private void bgrwCopy_DoWork(object sender, DoWorkEventArgs e) //Uses a background worker to add the URLs from the clipboard
         {
             this.CopyClipboard();
@@ -799,8 +794,7 @@ namespace Redirects
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            string url = "https://cp.solarwinds.com/display/WCT/Redirects+Tester+Tool";
-            System.Diagnostics.Process.Start(url);
+            System.Diagnostics.Process.Start(this.config.DocumentationUrl);
         }
 
         private void btnHelp_MouseHover(object sender, EventArgs e)
@@ -808,6 +802,10 @@ namespace Redirects
             this.toolTipHelp.SetToolTip(btnHelp, "Need Help? Click to open the documentation");
         }
     }
+    //Events end
+
+
+
 
 
     public static class ModifyProgressBarColor  //Changes color of progress bar

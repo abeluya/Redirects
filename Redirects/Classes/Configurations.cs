@@ -9,12 +9,17 @@ namespace Redirects
 {
     class Configurations
     {
-        //Variables
+        //Variables begin
+
         private string hostsPath; // Path of the hosts files (probably will change if exported to another OS)
         private string stagingIp; // IP of the staging URL
+        private string filePath;  // Path of the file to be loaded
+        private string documentationUrl; //Url of the app's documentation
+        
         //Variables end
 
         //Setters and getters
+
         public string HostsPath
         {
             set { this.hostsPath = value; }
@@ -27,16 +32,24 @@ namespace Redirects
             get { return this.stagingIp; }
         }
 
+        public string FilePath
+        {
+            set { this.filePath = value; }
+            get { return this.filePath; }
+        }
+
+        public string DocumentationUrl
+        {
+            set { this.documentationUrl = value; }
+            get { return this.documentationUrl; }
+        }
         //Setters and getters end
 
-        //Constructors
+        //Constructors begin
 
         public Configurations() //Default constructor
         {
-            /*var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.System);
-            this.hostsPath = Path.Combine(systemPath, @"drivers\etc\hosts");
-            this.stagingIp = "http://www.solarwinds.com-v1.edgekey-staging.net";*/
-            this.ReadConfig();
+            this.ReadConfigFile();
 
         }
 
@@ -47,8 +60,10 @@ namespace Redirects
         }
 
         //Constructors end
-        // Methods 
-        public void ReadConfig() //Reads config file from config flie
+
+        // Methods begin
+
+        public void ReadConfigFile() //Reads config file from config flie
         {
             string path = ".\\config.cfg";
             try
@@ -56,6 +71,7 @@ namespace Redirects
                 string[] lines = File.ReadAllLines(path); //Reads the file and create an array
                 this.hostsPath = lines[0];
                 this.stagingIp = lines[1];
+                this.documentationUrl = lines[2];
             }
             catch (System.Exception)
             {
@@ -63,6 +79,7 @@ namespace Redirects
                 this.stagingIp = "Error";
             }
         }
+
         // Methods end 
 
     }
