@@ -77,6 +77,7 @@ namespace Redirects
             {
                 this.hostsPath = "Check config file";
                 this.stagingIp = "Error";
+                this.documentationUrl = "htttp://www.google.com";
             }
         }
 
