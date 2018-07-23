@@ -760,10 +760,14 @@ namespace Redirects
                 this.loading.lblStatus.Text = "Done!";
             });
 
-            if (this.passed)
+            if (!this.passed)
+                this.DialogMessage("Redirects were successfully tested.\nISSUES FOUND", "INFO MESSAGE", 2);
+            else;
+
+            /*if (this.passed)
                 this.DialogMessage("Redirects were successfully tested.\nALL OK!", "INFO MESSAGE", 0);
             else
-                this.DialogMessage("Redirects were successfully tested.\nISSUES FOUND", "INFO MESSAGE", 2);
+                this.DialogMessage("Redirects were successfully tested.\nISSUES FOUND", "INFO MESSAGE", 2);*/
             this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
             {
                 this.FillGrid();
