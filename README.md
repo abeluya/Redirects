@@ -1,7 +1,7 @@
 # Redirects
 The redirect tester tool is an app developed to test the redirects and its response codes. The main idea of the application is to make easier to check a list of redirects by automating most of the process.
 
-(public/tool.gif)
+![Tester Tool App](public/tool.gif)
 
 # How it Works
 This software takes a list of redirects from the clipboard and then compare origin URLs against destiny URLs.
