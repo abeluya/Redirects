@@ -29,7 +29,7 @@ You can copy the URLs to your clipboard from sources that divide the URLs into 2
 **Notice that for both examples the titles of the columns are NOT selected. Selecting the titles of the tables might produce the application crashes.**
 
 ## Adding the URLs
-Once you copied the URLs into the clipboard, click on the **_ _ìPaste from Clipboardî_ _** button: 
+Once you copied the URLs into the clipboard, click on the **_‚ÄúPaste from Clipboard‚Äù_** button: 
 
 ![Copying Urls](public/copyUrls.png)
 
@@ -42,19 +42,19 @@ Close the message to make visible the URLs in the results panel:
 ![Urls copied](public/urlsCopied.png)
 
 ## Starting to test
-* Once you added the URLs, you can change the configurations on the right side of the application. For **staging** test, make sure both the IP and URL on the _ _ìEnvironment Configurationî_ _ box are according to the ones provided by Akamai.
+* Once you added the URLs, you can change the configurations on the right side of the application. For **staging** test, make sure both the IP and URL on the _ _‚ÄúEnvironment Configuration‚Äù_ _ box are according to the ones provided by Akamai.
 
-**IMPORTANT:** If you leave the **_ _ìLive Testî_ _** check unchecked, the system will write in the hosts file using the information provided in the _ _ìEnvironment Configurationî_ _ box. So, it is very important to make sure the data on these fields are ok, otherwise the test will fail.
+**IMPORTANT:** If you leave the **_ _‚ÄúLive Test‚Äù_ _** check unchecked, the system will write in the hosts file using the information provided in the _ _‚ÄúEnvironment Configuration‚Äù_ _ box. So, it is very important to make sure the data on these fields are ok, otherwise the test will fail.
 
-On the other hand, the **_ _ìShow Browserî_ _** check let you choose if you want to watch the browser running during the test or not. This option is **unmarked  by default.**
+On the other hand, the **_ _‚ÄúShow Browser‚Äù_ _** check let you choose if you want to watch the browser running during the test or not. This option is **unmarked  by default.**
 
 ![Config Panel](public/configuration.png)
 
-* Next step is to choose the proper response code you want to test in the _ _ìResponseî_ _ box:
+* Next step is to choose the proper response code you want to test in the _ _‚ÄúResponse‚Äù_ _ box:
 
 ![Response code selector](public/response.png)
 
-* When the configuration is done, you can start testing by clicking on the **_ _ìStartî_ _** button. A modal window will open while the tests is running: 
+* When the configuration is done, you can start testing by clicking on the **_ _‚ÄúStart‚Äù_ _** button. A modal window will open while the tests is running: 
 
 ![Progress Bar](public/progressGood.png)
 
