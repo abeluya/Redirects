@@ -26,6 +26,7 @@ You can copy the URLs to your clipboard from sources that divide the URLs into 2
 ![Jira Example](public/exampleJira.png)
 
 ![Excel Example](public/exampleExcel.png)
+
 **Notice that for both examples the titles of the columns are NOT selected. Selecting the titles of the tables might produce the application crashes.**
 
 ## Adding the URLs
