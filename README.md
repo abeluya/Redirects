@@ -42,19 +42,19 @@ Close the message to make visible the URLs in the results panel:
 ![Urls copied](public/urlsCopied.png)
 
 ## Starting to test
-* Once you added the URLs, you can change the configurations on the right side of the application. For **staging** test, make sure both the IP and URL on the _ _“Environment Configuration”_ _ box are according to the ones provided by Akamai.
+* Once you added the URLs, you can change the configurations on the right side of the application. For **staging** test, make sure both the IP and URL on the _“Environment Configuration”_ box are according to the ones provided by Akamai.
 
-**IMPORTANT:** If you leave the **_ _“Live Test”_ _** check unchecked, the system will write in the hosts file using the information provided in the _ _“Environment Configuration”_ _ box. So, it is very important to make sure the data on these fields are ok, otherwise the test will fail.
+**IMPORTANT:** If you leave the **_“Live Test”_** check unchecked, the system will write in the hosts file using the information provided in the _“Environment Configuration”_ box. So, it is very important to make sure the data on these fields are ok, otherwise the test will fail.
 
-On the other hand, the **_ _“Show Browser”_ _** check let you choose if you want to watch the browser running during the test or not. This option is **unmarked  by default.**
+On the other hand, the **_“Show Browser”_** check let you choose if you want to watch the browser running during the test or not. This option is **unmarked  by default.**
 
 ![Config Panel](public/configuration.png)
 
-* Next step is to choose the proper response code you want to test in the _ _“Response”_ _ box:
+* Next step is to choose the proper response code you want to test in the _“Response”_ box:
 
 ![Response code selector](public/response.png)
 
-* When the configuration is done, you can start testing by clicking on the **_ _“Start”_ _** button. A modal window will open while the tests is running: 
+* When the configuration is done, you can start testing by clicking on the **_“Start”_** button. A modal window will open while the tests is running: 
 
 ![Progress Bar](public/progressGood.png)
 
