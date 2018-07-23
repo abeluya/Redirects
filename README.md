@@ -31,15 +31,15 @@ You can copy the URLs to your clipboard from sources that divide the URLs into 2
 ##Adding the URLs
 Once you copied the URLs into the clipboard, click on the **_ _“Paste from Clipboard”_ _** button: 
 
-(public/copyUrls.png)
+![Copying Urls](public/copyUrls.png)
 
 This will automatically validate and add the URLs to the application. Once the process is done, you will receive a notification message:
 
-(public/appWorking.png)
+![App runnig](public/appWorking.png)
 
 Close the message to make visible the URLs in the results panel:
 
-(public/urlsCopied.png)
+![Urls copied](public/urlsCopied.png)
 
 ##Starting to test
 * Once you added the URLs, you can change the configurations on the right side of the application. For **staging** test, make sure both the IP and URL on the _ _“Environment Configuration”_ _ box are according to the ones provided by Akamai.
@@ -48,36 +48,36 @@ Close the message to make visible the URLs in the results panel:
 
 On the other hand, the **_ _“Show Browser”_ _** check let you choose if you want to watch the browser running during the test or not. This option is **unmarked  by default.**
 
-(public/configuration.png)
+![Config Panel](public/configuration.png)
 
 * Next step is to choose the proper response code you want to test in the _ _“Response”_ _ box:
 
-(public/response.png)
+![Response code selector](public/response.png)
 
 * When the configuration is done, you can start testing by clicking on the **_ _“Start”_ _** button. A modal window will open while the tests is running: 
 
-(public/progressGood.png)
+![Progress Bar](public/progressGood.png)
 
 * **In case the app finds any invalid redirect, the progress bar will turn its color into red:**
 
-(public/progressBad.png)
+![Progress Bar](public/progressBad.png)
 
 * After the test is done, you will receive a confirmation message and will be able to see the results in the results panel:
 
-(public/infoMessage.png)
+![Information Message](public/infoMessage.png)
 
 And that's it! The redirects are finally tested. You can take a look at the results in the status column of the result panel:
 
-(public/appResults.png)
+![Results Panel](public/appResults.png)
 
 #Additional notes
 
 * This application runs with Selenium Web driver, so it is necessary to have the Chrome driver installed in the same path of the app.
 * It is highly recommended to create a **back up of your _ _"hosts"_ _** file before start using the application. 
 
-(public/hosts.png)
+![hosts file](public/hosts.png)
 
 * Also, please **add a line break at the end of the _ _"hosts"_ _** file. There is a unknown issue when editing this file so adding the line break will prevent the file gets corrupted. In case you need it, this is the path of the "hosts" file: C:\Windows\System32\Drivers\etc
 * If you want to change the default path of the "hosts" file, the default staging URL or the default documentation URL, you can modify the **"config.cfg"** file. Do not change the order of the values or the application might crash.
 
-(public/configCfg.png)
+![Config.cfg file](public/configCfg.png)
