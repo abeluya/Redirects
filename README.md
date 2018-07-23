@@ -78,7 +78,7 @@ And that's it! The redirects are finally tested. You can take a look at the resu
 
 ![hosts file](public/hosts.png)
 
-* Also, please **add a line break at the end of the _ _"hosts"_ _** file. There is a unknown issue when editing this file so adding the line break will prevent the file gets corrupted. In case you need it, this is the path of the "hosts" file: C:\Windows\System32\Drivers\etc
+* Also, please **add a line break at the end of the _"hosts"_** file. There is a unknown issue when editing this file so adding the line break will prevent the file gets corrupted. In case you need it, this is the path of the "hosts" file: C:\Windows\System32\Drivers\etc
 * If you want to change the default path of the "hosts" file, the default staging URL or the default documentation URL, you can modify the **"config.cfg"** file. Do not change the order of the values or the application might crash.
 
 ![Config.cfg file](public/configCfg.png)
