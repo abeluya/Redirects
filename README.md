@@ -20,7 +20,7 @@ This software takes a list of redirects from the clipboard and then compare orig
 # Using the application
 The use of this application was intended to automate the test of redirects. To complete this, the app will need, as minimum, one source and one destiny IP.
 
-##Copy your URLs to the clipboard
+## Copy your URLs to the clipboard
 You can copy the URLs to your clipboard from sources that divide the URLs into 2 columns: source and destiny.
 
 ![Jira Example](public/exampleJira.png)
@@ -28,7 +28,7 @@ You can copy the URLs to your clipboard from sources that divide the URLs into 2
 ![Excel Example](public/exampleExcel.png)
 **Notice that for both examples the titles of the columns are NOT selected. Selecting the titles of the tables might produce the application crashes.**
 
-##Adding the URLs
+## Adding the URLs
 Once you copied the URLs into the clipboard, click on the **_ _“Paste from Clipboard”_ _** button: 
 
 ![Copying Urls](public/copyUrls.png)
@@ -41,7 +41,7 @@ Close the message to make visible the URLs in the results panel:
 
 ![Urls copied](public/urlsCopied.png)
 
-##Starting to test
+## Starting to test
 * Once you added the URLs, you can change the configurations on the right side of the application. For **staging** test, make sure both the IP and URL on the _ _“Environment Configuration”_ _ box are according to the ones provided by Akamai.
 
 **IMPORTANT:** If you leave the **_ _“Live Test”_ _** check unchecked, the system will write in the hosts file using the information provided in the _ _“Environment Configuration”_ _ box. So, it is very important to make sure the data on these fields are ok, otherwise the test will fail.
@@ -70,7 +70,7 @@ And that's it! The redirects are finally tested. You can take a look at the resu
 
 ![Results Panel](public/appResults.png)
 
-#Additional notes
+# Additional notes
 
 * This application runs with Selenium Web driver, so it is necessary to have the Chrome driver installed in the same path of the app.
 * It is highly recommended to create a **back up of your _ _"hosts"_ _** file before start using the application. 
