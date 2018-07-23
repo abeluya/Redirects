@@ -53,7 +53,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ico.ico</ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
@@ -157,6 +157,7 @@
     <None Include="circuit-texture.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icon.ico" />
     <None Include="help.png" />
     <Content Include="ico.ico" />
     <None Include="Resources\lg.dash-ring-loading-icon.gif" />
