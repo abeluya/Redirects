@@ -175,6 +175,7 @@ namespace Redirects
 
         private void CompareURL() //Compares the destiny URL with the actual URL of the httpResponse
         {
+            this.GetResponse();
             HttpWebRequest myHttpWebRequest;
             HttpWebResponse myHttpWebResponse;
             for (int i = 0; i < this.list.Count; i++)
@@ -188,7 +189,7 @@ namespace Redirects
                         myHttpWebRequest = (HttpWebRequest)WebRequest.Create(this.list[i].Origin);  //Sends origin URL
                         myHttpWebRequest.Timeout = 1000;
                         myHttpWebRequest.ReadWriteTimeout = 1000;
-                        myHttpWebRequest.AllowAutoRedirect = false;
+                        myHttpWebRequest.AllowAutoRedirect = true;
                         if (this.chkV2.Checked)
                         {
                             myHttpWebRequest.Headers["v2header"] = "true";
@@ -198,7 +199,8 @@ namespace Redirects
 
                         this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
                         {
-                            if (String.Compare(this.list[i].Destiny, myHttpWebResponse.ResponseUri.ToString()) == 0) //Compare destiny vs httpResponse URLs
+                            this.list[i].ServerDestiny = myHttpWebResponse.ResponseUri.ToString();
+                            if (this.list[i].Destiny.Equals(this.list[i].ServerDestiny, StringComparison.InvariantCultureIgnoreCase)) //Compare destiny vs httpResponse URLs
                             {
                                 if (this.list[i].Response == this.response) // Compare response code
                                 {
@@ -221,11 +223,8 @@ namespace Redirects
 
                             }
                         });
-                        Console.WriteLine("Origin: " + this.GetIP(this.list[i].Origin));
-                        Console.WriteLine("Destiny: " + this.GetIP(this.list[i].Destiny));
-                        Console.WriteLine("Origin> {0}", this.list[i].Origin);
-                        Console.WriteLine(this.list[i].Response);
-                        Console.WriteLine("Destiny {0}\nPassed? {1}", myHttpWebResponse.ResponseUri, this.list[i].Passed);
+                        Console.WriteLine("Destiny: {0}", this.list[i].Destiny);
+                        Console.WriteLine("Server destiny {0}\nPassed? {1}", this.list[i].ServerDestiny, this.list[i].Passed);
                         myHttpWebResponse.Close();
 
                     }
@@ -462,8 +461,8 @@ namespace Redirects
             this.loading.pgrBar.Value = 0;
             this.loading.pgrBar.Minimum = 0;
             this.loading.pgrBar.Maximum = this.list.Count * 3;
-
-            this.brgwLoading.RunWorkerAsync(); //Start checking URLs in the background worker
+            this.CompareURL();
+            //this.brgwLoading.RunWorkerAsync(); //Start checking URLs in the background worker
         }
 
         private void PrintURLS()
