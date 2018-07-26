@@ -282,6 +282,24 @@ namespace Redirects
                 }
 
             }
+            this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
+            {
+                this.FillGrid();
+                this.HidePanel();
+                this.Enabled = true;
+
+                //Brings form to the front
+                if (this.WindowState == FormWindowState.Minimized)
+                    this.WindowState = FormWindowState.Normal;
+
+                this.Show();
+                this.Activate();
+                this.ShowInTaskbar = true;
+                this.TopMost = true;
+                this.Focus();
+                this.TopMost = false;
+                //Brings form to the front
+            });
 
 
 
@@ -301,7 +319,8 @@ namespace Redirects
                 Console.WriteLine(this.config.HostsPath);
                 using (StreamWriter stream = new StreamWriter(this.config.HostsPath, true, Encoding.Default))
                 {
-                    stream.WriteLine(this.txtIp.Text + " " + this.txtUrl.Text);
+                    //stream.WriteLine(System.Environment.NewLine + this.txtIp.Text + " " + this.txtUrl.Text);
+                    stream.Write(System.Environment.NewLine + this.txtIp.Text + " " + this.txtUrl.Text);
                     stream.Close();
                 }
                 return true;
@@ -332,10 +351,29 @@ namespace Redirects
         private void DeleteLastLine()
         {
 
-            Console.WriteLine(this.config.HostsPath);
-            List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
+            try
+            {
 
-            File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray());
+                Console.WriteLine(this.config.HostsPath);
+                List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
+                //File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray());
+                Stream stream = File.OpenWrite(this.config.HostsPath);
+                StreamWriter writer = new StreamWriter(stream);
+                if (lines.Count > 0)
+                {
+                    stream.SetLength(0);
+                    for (int i = 0; i < lines.Count - 1; i++)
+                    {
+                        writer.WriteLine(lines[i]);
+                    }
+                   //writer.Write(lines[lines.Count - 1]);
+                }
+                stream.Close();
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                this.DialogMessage("hosts file not found!", "CRITICAL", 0);
+            }
 
         }
 
@@ -461,8 +499,7 @@ namespace Redirects
             this.loading.pgrBar.Value = 0;
             this.loading.pgrBar.Minimum = 0;
             this.loading.pgrBar.Maximum = this.list.Count * 3;
-            this.CompareURL();
-            //this.brgwLoading.RunWorkerAsync(); //Start checking URLs in the background worker
+            this.brgwLoading.RunWorkerAsync(); //Start checking URLs in the background worker
         }
 
         private void PrintURLS()
