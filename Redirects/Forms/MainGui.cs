@@ -355,9 +355,9 @@ namespace Redirects
             {
 
                 Console.WriteLine(this.config.HostsPath);
-                List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
+                //List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
                 //File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray());
-                Stream stream = File.OpenWrite(this.config.HostsPath);
+                /*Stream stream = File.OpenWrite(this.config.HostsPath);
                 StreamWriter writer = new StreamWriter(stream);
                 if (lines.Count > 0)
                 {
@@ -368,7 +368,27 @@ namespace Redirects
                     }
                    //writer.Write(lines[lines.Count - 1]);
                 }
-                stream.Close();
+                stream.Close();*/
+                using (var writer = new StreamWriter(this.config.HostsPath))
+                {
+                    using (var reader = new StreamReader(this.config.HostsPath))
+                    {
+                        //Ignore first line
+                        reader.ReadLine();
+                        string line;
+                        do
+                        {
+                            line = reader.ReadLine();
+
+                            //Until we read the last line, write out the
+                            //current line - note that blank lines count
+                            if (!reader.EndOfStream)
+                                writer.WriteLine(line);
+                        } while (line != null);
+                        reader.Close();
+                    };
+                };
+
             }
             catch (System.IO.FileNotFoundException)
             {
