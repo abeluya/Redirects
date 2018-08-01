@@ -333,6 +333,45 @@ namespace Redirects
             }
         }
 
+        private bool WriteHostsTest()
+        {
+            try
+            {
+                if (File.Exists(this.config.HostsPath))
+                {
+                    List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
+                    //File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray());
+                    Stream stream = File.OpenWrite(this.config.HostsPath);
+                    StreamWriter writer = new StreamWriter(stream);
+                    if (lines.Count > 0)
+                    {
+                        stream.SetLength(0);
+                        for (int i = 0; i < lines.Count - 1; i++)
+                        {
+                            writer.WriteLine(lines[i]);
+                        }
+                        //writer.Write(lines[lines.Count - 1]);
+                    }
+                    writer.WriteLine(this.txtIp.Text + " " + this.txtUrl.Text);
+                    stream.Close();
+                    return true;
+                }
+                return false;
+            }
+            catch (System.UnauthorizedAccessException e)
+            {
+                Console.WriteLine(e);
+                this.DialogMessage("Unable to write the hosts file", "ERROR MESSAGE", 0);
+                return false;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e);
+                this.DialogMessage(e.ToString(), "ERROR MESSAGE", 0);
+                return false;
+            }
+        }
+
         private string GetIP(string Url)
         {
             try
@@ -509,7 +548,8 @@ namespace Redirects
                 }
                 else
                 {
-                    this.WriteHosts();
+                    //this.WriteHosts();
+                    this.WriteHostsTest();
                 }
 
             }
