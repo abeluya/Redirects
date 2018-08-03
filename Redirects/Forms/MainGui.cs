@@ -328,6 +328,34 @@ namespace Redirects
             catch (System.UnauthorizedAccessException e)
             {
                 Console.WriteLine(e);
+                this.DialogMessage("Unable to access the hosts file", "ERROR MESSAGE", 0);
+                return false;
+            }
+            catch(System.Exception e)
+            {
+                Console.WriteLine(e);
+                this.DialogMessage("Unable to write the hosts file", "ERROR MESSAGE", 0);
+                return false;
+            }
+
+        }
+
+        private bool WriteHostsTest()
+        {
+            try
+            {
+                Console.WriteLine(this.config.HostsPath);
+                using (StreamWriter stream = new StreamWriter(this.config.HostsPath, true, Encoding.Default))
+                {
+                    //stream.WriteLine(System.Environment.NewLine + this.txtIp.Text + " " + this.txtUrl.Text);
+                    stream.Write(System.Environment.NewLine + this.txtIp.Text + " " + this.txtUrl.Text);
+                    stream.Close();
+                }
+                return true;
+            }
+            catch (System.UnauthorizedAccessException e)
+            {
+                Console.WriteLine(e);
                 this.DialogMessage("Unable to write the hosts file", "ERROR MESSAGE", 0);
                 return false;
             }
@@ -509,7 +537,8 @@ namespace Redirects
                 }
                 else
                 {
-                    this.WriteHosts();
+                    //this.WriteHosts();
+                    this.WriteHostsTest();
                 }
 
             }
