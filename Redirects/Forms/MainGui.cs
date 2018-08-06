@@ -328,9 +328,16 @@ namespace Redirects
             catch (System.UnauthorizedAccessException e)
             {
                 Console.WriteLine(e);
+                this.DialogMessage("Unable to access the hosts file", "ERROR MESSAGE", 0);
+                return false;
+            }
+            catch(System.Exception e)
+            {
+                Console.WriteLine(e);
                 this.DialogMessage("Unable to write the hosts file", "ERROR MESSAGE", 0);
                 return false;
             }
+
         }
 
         private string GetIP(string Url)
@@ -355,40 +362,13 @@ namespace Redirects
             {
 
                 Console.WriteLine(this.config.HostsPath);
-                //List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
-                //File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray());
-                /*Stream stream = File.OpenWrite(this.config.HostsPath);
-                StreamWriter writer = new StreamWriter(stream);
-                if (lines.Count > 0)
+                List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
+                File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray()); //Delete last line of file
+                string myFileData = File.ReadAllText(this.config.HostsPath);
+                if (myFileData.EndsWith(Environment.NewLine)) //Delete break line at the end of file
                 {
-                    stream.SetLength(0);
-                    for (int i = 0; i < lines.Count - 1; i++)
-                    {
-                        writer.WriteLine(lines[i]);
-                    }
-                   //writer.Write(lines[lines.Count - 1]);
+                    File.WriteAllText(this.config.HostsPath, myFileData.TrimEnd(Environment.NewLine.ToCharArray()));
                 }
-                stream.Close();*/
-                using (var writer = new StreamWriter(this.config.HostsPath))
-                {
-                    using (var reader = new StreamReader(this.config.HostsPath))
-                    {
-                        //Ignore first line
-                        reader.ReadLine();
-                        string line;
-                        do
-                        {
-                            line = reader.ReadLine();
-
-                            //Until we read the last line, write out the
-                            //current line - note that blank lines count
-                            if (!reader.EndOfStream)
-                                writer.WriteLine(line);
-                        } while (line != null);
-                        reader.Close();
-                    };
-                };
-
             }
             catch (System.IO.FileNotFoundException)
             {
