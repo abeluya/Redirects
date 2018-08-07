@@ -87,30 +87,38 @@ namespace Redirects
                 {
                     if (i.Length > 1)
                     {
-                        string[] test;
-                        test = i.Split('\t');
-                        Console.WriteLine("Origin: {0}\nDestino: {1}", test[0], test[test.Length - 1]);
-
-                        if (test[0].Contains("https://"))
+                        string[] line;
+                        line = i.Split('\t');
+                        Console.WriteLine("Origin: {0}\nDestino: {1}", line[0], line[line.Length - 1]);
+                        if (line[0].Contains("https://"))
                         {
-                            this.list.Add(new Redirect(test[0], test[1]));
+                            this.list.Add(new Redirect(line[0], line[1]));
                         }
                         else
                         {
-                            if (test[0].Contains("http://"))
+                            if (line[0].Contains("http://"))
                             {
-                                this.list.Add(new Redirect(test[0], test[1]));
+                                this.list.Add(new Redirect(line[0], line[1]));
                             }
                             else
                             {
-                                this.list.Add(new Redirect("https://" + test[0], "https://" + test[1]));
+                                this.list.Add(new Redirect("https://" + line[0], "https://" + line[1]));
                             }
                         }
                     }
 
 
                 }
-                return true;
+                if (this.list.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    this.DialogMessage("Non-supported format on clipboard. Please make sure to copy only valid URLs.", "ERROR MESSAGE", 1);
+                    return false; ;
+                }
+
             }
             catch (System.IndexOutOfRangeException e)
             {
@@ -528,8 +536,7 @@ namespace Redirects
                 }
                 else
                 {
-                    //this.WriteHosts();
-                    this.WriteHostsTest();
+                    this.WriteHosts();
                 }
 
             }
@@ -737,10 +744,19 @@ namespace Redirects
                     Console.WriteLine(this.list.Count);
                     this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
                     {
-                        this.dataGridLista.Rows.Clear();
-                        this.txtUrl.Text = this.GetDomain(this.list[0].Origin);
-                        this.domainName = this.txtUrl.Text;
-                        this.loading.lblStatus.Text = "Retrieving URLs from clipboard";
+                        try
+                        {
+                            this.dataGridLista.Rows.Clear();
+                            this.txtUrl.Text = this.GetDomain(this.list[0].Origin);
+                            this.domainName = this.txtUrl.Text;
+                            this.loading.lblStatus.Text = "Retrieving URLs from clipboard";
+                        }
+                        catch (System.ArgumentOutOfRangeException exception)
+                        {
+                            Console.WriteLine(exception);
+                            this.loading.lblStatus.Text = "Error";
+                            this.Enabled = true;
+                        }
                     });
                     this.redirectsLoaded = true;
                     this.DialogMessage("URLs added! Ready to start testing!", "INFO MESSAGE", 0);
@@ -762,6 +778,7 @@ namespace Redirects
                 }
 
             }
+            
             catch (System.Exception clipException)
             {
                 this.DialogMessage(clipException.ToString(), "ERROR MESSAGE", 1);
@@ -840,10 +857,6 @@ namespace Redirects
                 this.DialogMessage("Redirects were successfully tested.\nISSUES FOUND", "INFO MESSAGE", 2);
             else;
 
-            /*if (this.passed)
-                this.DialogMessage("Redirects were successfully tested.\nALL OK!", "INFO MESSAGE", 0);
-            else
-                this.DialogMessage("Redirects were successfully tested.\nISSUES FOUND", "INFO MESSAGE", 2);*/
             this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
             {
                 this.FillGrid();
@@ -862,9 +875,6 @@ namespace Redirects
                 this.TopMost = false;
                 //Brings form to the front
             });
-
-
-
         }
 
         private void bgrwCopy_DoWork(object sender, DoWorkEventArgs e) //Uses a background worker to add the URLs from the clipboard
@@ -883,7 +893,6 @@ namespace Redirects
         }
     }
     //Events end
-
 
 
 
