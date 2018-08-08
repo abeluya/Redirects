@@ -85,26 +85,40 @@ namespace Redirects
 
                 foreach (string i in split)
                 {
-                    if (i.Length > 1)
+                    if (i.Length > 1) //Line is not empty
                     {
                         string[] line;
                         line = i.Split('\t');
-                        Console.WriteLine("Origin: {0}\nDestino: {1}", line[0], line[line.Length - 1]);
-                        if (line[0].Contains("https://"))
+                        Console.WriteLine("Origin: {0}\nDestiny: {1}", line[0], line[line.Length - 1]);
+                        if (line.Count() > 0 && line.Count() < 3) //Validate the two columns
                         {
+                            if (!line[0].Contains("https://"))
+                            {
+                                if (!line[0].Contains("http://"))
+                                {
+                                    line[0] = "https://" + line[0];
+                                }
+                                else
+                                {
+                                   line[0] = line[0].Insert(4, "s");
+                                }
+                            }
+
+                            if (!line[1].Contains("https://"))
+                            {
+                                if (!line[1].Contains("http://"))
+                                {
+                                     line[1] = "https://" + line[1];
+                                }
+                                else
+                                {
+                                    line[1] = line[1].Insert(4, "s");
+                                }
+                            }
                             this.list.Add(new Redirect(line[0], line[1]));
+
                         }
-                        else
-                        {
-                            if (line[0].Contains("http://"))
-                            {
-                                this.list.Add(new Redirect(line[0], line[1]));
-                            }
-                            else
-                            {
-                                this.list.Add(new Redirect("https://" + line[0], "https://" + line[1]));
-                            }
-                        }
+
                     }
 
 
