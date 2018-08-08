@@ -74,11 +74,7 @@ And that's it! The redirects are finally tested. You can take a look at the resu
 # Additional notes
 
 * This application runs with Selenium Web driver, so it is necessary to have the Chrome driver installed in the same path of the app.
-* It is highly recommended to create a **back up of your _ _"hosts"_ _** file before start using the application. 
-
-![hosts file](public/hosts.png)
-
-* Also, please **add a line break at the end of the _"hosts"_** file. There is a unknown issue when editing this file so adding the line break will prevent the file gets corrupted. In case you need it, this is the path of the "hosts" file: C:\Windows\System32\Drivers\etc
+* It is highly recommended to create a **back up of your _ _"hosts"_ _** file before start using the application. In case you need it, this is the path of the "hosts" file: _C:\Windows\System32\Drivers\etc_
 * If you want to change the default path of the "hosts" file, the default staging URL or the default documentation URL, you can modify the **"config.cfg"** file. Do not change the order of the values or the application might crash.
 
 ![Config.cfg file](public/configCfg.png)
