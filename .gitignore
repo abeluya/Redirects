@@ -11,6 +11,8 @@
 *.cs
 *.dll
 *.txt
+*.xml
+*.config
 
 # Paths
 Build/

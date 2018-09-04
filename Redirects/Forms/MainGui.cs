@@ -218,7 +218,6 @@ namespace Redirects
                         }
                         myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();    // Gets a response URL based on the origin URL
                         Console.WriteLine(myHttpWebResponse.StatusCode);
-
                         this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
                         {
                             this.list[i].ServerDestiny = myHttpWebResponse.ResponseUri.ToString();
@@ -858,6 +857,7 @@ namespace Redirects
         {
             this.GetResponse();
             this.SeleniumChromeCheck();
+            //this.CompareURL();
             if (!this.chkLive.Checked)
             {
                 this.DeleteLastLine();
