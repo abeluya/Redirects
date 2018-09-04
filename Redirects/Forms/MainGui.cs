@@ -85,32 +85,54 @@ namespace Redirects
 
                 foreach (string i in split)
                 {
-                    if (i.Length > 1)
+                    if (i.Length > 1) //Line is not empty
                     {
-                        string[] test;
-                        test = i.Split('\t');
-                        Console.WriteLine("Origin: {0}\nDestino: {1}", test[0], test[test.Length - 1]);
+                        string[] line;
+                        line = i.Split('\t');
+                        Console.WriteLine("Origin: {0}\nDestiny: {1}", line[0], line[line.Length - 1]);
+                        if (line.Count() > 0 && line.Count() < 3) //Validate the two columns
+                        {
+                            if (!line[0].Contains("https://"))
+                            {
+                                if (!line[0].Contains("http://"))
+                                {
+                                    line[0] = "https://" + line[0];
+                                }
+                                else
+                                {
+                                   line[0] = line[0].Insert(4, "s");
+                                }
+                            }
 
-                        if (test[0].Contains("https://"))
-                        {
-                            this.list.Add(new Redirect(test[0], test[1]));
-                        }
-                        else
-                        {
-                            if (test[0].Contains("http://"))
+                            if (!line[1].Contains("https://"))
                             {
-                                this.list.Add(new Redirect(test[0], test[1]));
+                                if (!line[1].Contains("http://"))
+                                {
+                                     line[1] = "https://" + line[1];
+                                }
+                                else
+                                {
+                                    line[1] = line[1].Insert(4, "s");
+                                }
                             }
-                            else
-                            {
-                                this.list.Add(new Redirect("https://" + test[0], "https://" + test[1]));
-                            }
+                            this.list.Add(new Redirect(line[0], line[1]));
+
                         }
+
                     }
 
 
                 }
-                return true;
+                if (this.list.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    this.DialogMessage("Non-supported format on clipboard. Please make sure to copy only valid URLs.", "ERROR MESSAGE", 1);
+                    return false; ;
+                }
+
             }
             catch (System.IndexOutOfRangeException e)
             {
@@ -175,6 +197,7 @@ namespace Redirects
 
         private void CompareURL() //Compares the destiny URL with the actual URL of the httpResponse
         {
+            this.GetResponse();
             HttpWebRequest myHttpWebRequest;
             HttpWebResponse myHttpWebResponse;
             for (int i = 0; i < this.list.Count; i++)
@@ -188,16 +211,16 @@ namespace Redirects
                         myHttpWebRequest = (HttpWebRequest)WebRequest.Create(this.list[i].Origin);  //Sends origin URL
                         myHttpWebRequest.Timeout = 1000;
                         myHttpWebRequest.ReadWriteTimeout = 1000;
-                        myHttpWebRequest.AllowAutoRedirect = false;
+                        myHttpWebRequest.AllowAutoRedirect = true;
                         if (this.chkV2.Checked)
                         {
                             myHttpWebRequest.Headers["v2header"] = "true";
                         }
                         myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();    // Gets a response URL based on the origin URL
                         Console.WriteLine(myHttpWebResponse.StatusCode);
-                        this.list[i].ServerDestiny = myHttpWebResponse.ResponseUri.ToString();
                         this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
                         {
+                            this.list[i].ServerDestiny = myHttpWebResponse.ResponseUri.ToString();
                             if (this.list[i].Destiny.Equals(this.list[i].ServerDestiny, StringComparison.InvariantCultureIgnoreCase)) //Compare destiny vs httpResponse URLs
                             {
                                 if (this.list[i].Response == this.response) // Compare response code
@@ -221,11 +244,8 @@ namespace Redirects
 
                             }
                         });
-                        Console.WriteLine("Origin: " + this.GetIP(this.list[i].Origin));
-                        Console.WriteLine("Destiny: " + this.GetIP(this.list[i].Destiny));
-                        Console.WriteLine("Origin> {0}", this.list[i].Origin);
-                        Console.WriteLine(this.list[i].Response);
-                        Console.WriteLine("Destiny {0}\nPassed? {1}", myHttpWebResponse.ResponseUri, this.list[i].Passed);
+                        Console.WriteLine("Destiny: {0}", this.list[i].Destiny);
+                        Console.WriteLine("Server destiny {0}\nPassed? {1}", this.list[i].ServerDestiny, this.list[i].Passed);
                         myHttpWebResponse.Close();
 
                     }
@@ -283,6 +303,24 @@ namespace Redirects
                 }
 
             }
+            this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
+            {
+                this.FillGrid();
+                this.HidePanel();
+                this.Enabled = true;
+
+                //Brings form to the front
+                if (this.WindowState == FormWindowState.Minimized)
+                    this.WindowState = FormWindowState.Normal;
+
+                this.Show();
+                this.Activate();
+                this.ShowInTaskbar = true;
+                this.TopMost = true;
+                this.Focus();
+                this.TopMost = false;
+                //Brings form to the front
+            });
 
 
 
@@ -302,7 +340,8 @@ namespace Redirects
                 Console.WriteLine(this.config.HostsPath);
                 using (StreamWriter stream = new StreamWriter(this.config.HostsPath, true, Encoding.Default))
                 {
-                    stream.WriteLine(this.txtIp.Text + " " + this.txtUrl.Text);
+                    //stream.WriteLine(System.Environment.NewLine + this.txtIp.Text + " " + this.txtUrl.Text);
+                    stream.Write(System.Environment.NewLine + this.txtIp.Text + " " + this.txtUrl.Text);
                     stream.Close();
                 }
                 return true;
@@ -310,7 +349,53 @@ namespace Redirects
             catch (System.UnauthorizedAccessException e)
             {
                 Console.WriteLine(e);
+                this.DialogMessage("Unable to access the hosts file", "ERROR MESSAGE", 0);
+                return false;
+            }
+            catch(System.Exception e)
+            {
+                Console.WriteLine(e);
                 this.DialogMessage("Unable to write the hosts file", "ERROR MESSAGE", 0);
+                return false;
+            }
+
+        }
+
+        private bool WriteHostsTest()
+        {
+            try
+            {
+                if (File.Exists(this.config.HostsPath))
+                {
+                    List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
+                    //File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray());
+                    Stream stream = File.OpenWrite(this.config.HostsPath);
+                    StreamWriter writer = new StreamWriter(stream);
+                    if (lines.Count > 0)
+                    {
+                        stream.SetLength(0);
+                        for (int i = 0; i < lines.Count - 1; i++)
+                        {
+                            writer.WriteLine(lines[i]);
+                        }
+                        //writer.Write(lines[lines.Count - 1]);
+                    }
+                    writer.WriteLine(this.txtIp.Text + " " + this.txtUrl.Text);
+                    stream.Close();
+                    return true;
+                }
+                return false;
+            }
+            catch (System.UnauthorizedAccessException e)
+            {
+                Console.WriteLine(e);
+                this.DialogMessage("Unable to write the hosts file", "ERROR MESSAGE", 0);
+                return false;
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e);
+                this.DialogMessage(e.ToString(), "ERROR MESSAGE", 0);
                 return false;
             }
         }
@@ -333,10 +418,22 @@ namespace Redirects
         private void DeleteLastLine()
         {
 
-            Console.WriteLine(this.config.HostsPath);
-            List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
+            try
+            {
 
-            File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray());
+                Console.WriteLine(this.config.HostsPath);
+                List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
+                File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray()); //Delete last line of file
+                string myFileData = File.ReadAllText(this.config.HostsPath);
+                if (myFileData.EndsWith(Environment.NewLine)) //Delete break line at the end of file
+                {
+                    File.WriteAllText(this.config.HostsPath, myFileData.TrimEnd(Environment.NewLine.ToCharArray()));
+                }
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                this.DialogMessage("hosts file not found!", "CRITICAL", 0);
+            }
 
         }
 
@@ -462,7 +559,6 @@ namespace Redirects
             this.loading.pgrBar.Value = 0;
             this.loading.pgrBar.Minimum = 0;
             this.loading.pgrBar.Maximum = this.list.Count * 3;
-
             this.brgwLoading.RunWorkerAsync(); //Start checking URLs in the background worker
         }
 
@@ -661,10 +757,19 @@ namespace Redirects
                     Console.WriteLine(this.list.Count);
                     this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
                     {
-                        this.dataGridLista.Rows.Clear();
-                        this.txtUrl.Text = this.GetDomain(this.list[0].Origin);
-                        this.domainName = this.txtUrl.Text;
-                        this.loading.lblStatus.Text = "Retrieving URLs from clipboard";
+                        try
+                        {
+                            this.dataGridLista.Rows.Clear();
+                            this.txtUrl.Text = this.GetDomain(this.list[0].Origin);
+                            this.domainName = this.txtUrl.Text;
+                            this.loading.lblStatus.Text = "Retrieving URLs from clipboard";
+                        }
+                        catch (System.ArgumentOutOfRangeException exception)
+                        {
+                            Console.WriteLine(exception);
+                            this.loading.lblStatus.Text = "Error";
+                            this.Enabled = true;
+                        }
                     });
                     this.redirectsLoaded = true;
                     this.DialogMessage("URLs added! Ready to start testing!", "INFO MESSAGE", 0);
@@ -686,6 +791,7 @@ namespace Redirects
                 }
 
             }
+            
             catch (System.Exception clipException)
             {
                 this.DialogMessage(clipException.ToString(), "ERROR MESSAGE", 1);
@@ -761,10 +867,10 @@ namespace Redirects
                 this.loading.lblStatus.Text = "Done!";
             });
 
-            if (this.passed)
-                this.DialogMessage("Redirects were successfully tested.\nALL OK!", "INFO MESSAGE", 0);
-            else
+            if (!this.passed)
                 this.DialogMessage("Redirects were successfully tested.\nISSUES FOUND", "INFO MESSAGE", 2);
+            else;
+
             this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
             {
                 this.FillGrid();
@@ -783,9 +889,6 @@ namespace Redirects
                 this.TopMost = false;
                 //Brings form to the front
             });
-
-
-
         }
 
         private void bgrwCopy_DoWork(object sender, DoWorkEventArgs e) //Uses a background worker to add the URLs from the clipboard
@@ -804,7 +907,6 @@ namespace Redirects
         }
     }
     //Events end
-
 
 
 

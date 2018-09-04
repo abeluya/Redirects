@@ -19,6 +19,7 @@ Build/
 .vs/
 packages/
 Redirects/bin/Debug/
+Redirects/bin/Release/
 Redirects/Redirects/obj/
 
 
