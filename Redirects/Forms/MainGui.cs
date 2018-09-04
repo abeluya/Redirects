@@ -195,10 +195,10 @@ namespace Redirects
                         }
                         myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();    // Gets a response URL based on the origin URL
                         Console.WriteLine(myHttpWebResponse.StatusCode);
-
+                        this.list[i].ServerDestiny = myHttpWebResponse.ResponseUri.ToString();
                         this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
                         {
-                            if (String.Compare(this.list[i].Destiny, myHttpWebResponse.ResponseUri.ToString()) == 0) //Compare destiny vs httpResponse URLs
+                            if (this.list[i].Destiny.Equals(this.list[i].ServerDestiny, StringComparison.InvariantCultureIgnoreCase)) //Compare destiny vs httpResponse URLs
                             {
                                 if (this.list[i].Response == this.response) // Compare response code
                                 {
@@ -751,6 +751,7 @@ namespace Redirects
         {
             this.GetResponse();
             this.SeleniumChromeCheck();
+            //this.CompareURL();
             if (!this.chkLive.Checked)
             {
                 this.DeleteLastLine();
