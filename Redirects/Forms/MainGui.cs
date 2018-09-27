@@ -346,6 +346,12 @@ namespace Redirects
                 }
                 return true;
             }
+            catch (System.IO.IOException e)
+            {
+                //this.DialogMessage("Hosts file is being used by another application. Try again later", "CRITICAL", 1);
+                this.DialogMessage(e.ToString(), "CRITICAL", 1);
+                return false;
+            }
             catch (System.UnauthorizedAccessException e)
             {
                 Console.WriteLine(e);
@@ -359,45 +365,6 @@ namespace Redirects
                 return false;
             }
 
-        }
-
-        private bool WriteHostsTest()
-        {
-            try
-            {
-                if (File.Exists(this.config.HostsPath))
-                {
-                    List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
-                    //File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray());
-                    Stream stream = File.OpenWrite(this.config.HostsPath);
-                    StreamWriter writer = new StreamWriter(stream);
-                    if (lines.Count > 0)
-                    {
-                        stream.SetLength(0);
-                        for (int i = 0; i < lines.Count - 1; i++)
-                        {
-                            writer.WriteLine(lines[i]);
-                        }
-                        //writer.Write(lines[lines.Count - 1]);
-                    }
-                    writer.WriteLine(this.txtIp.Text + " " + this.txtUrl.Text);
-                    stream.Close();
-                    return true;
-                }
-                return false;
-            }
-            catch (System.UnauthorizedAccessException e)
-            {
-                Console.WriteLine(e);
-                this.DialogMessage("Unable to write the hosts file", "ERROR MESSAGE", 0);
-                return false;
-            }
-            catch (System.Exception e)
-            {
-                Console.WriteLine(e);
-                this.DialogMessage(e.ToString(), "ERROR MESSAGE", 0);
-                return false;
-            }
         }
 
         private string GetIP(string Url)
@@ -420,19 +387,29 @@ namespace Redirects
 
             try
             {
-
-                Console.WriteLine(this.config.HostsPath);
-                List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
-                File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray()); //Delete last line of file
-                string myFileData = File.ReadAllText(this.config.HostsPath);
-                if (myFileData.EndsWith(Environment.NewLine)) //Delete break line at the end of file
+                using (StreamWriter stream = new StreamWriter(this.config.HostsPath, true, Encoding.Default))
                 {
-                    File.WriteAllText(this.config.HostsPath, myFileData.TrimEnd(Environment.NewLine.ToCharArray()));
-                }
+                    Console.WriteLine(this.config.HostsPath);
+                    List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
+                    File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray()); //Delete last line of file
+                    string myFileData = File.ReadAllText(this.config.HostsPath);
+                    if (myFileData.EndsWith(Environment.NewLine)) //Delete break line at the end of file
+                    {
+                        File.WriteAllText(this.config.HostsPath, myFileData.TrimEnd(Environment.NewLine.ToCharArray()));
+                    }
+                    Console.WriteLine(this.config.HostsPath);
+
+                }   
             }
+            
             catch (System.IO.FileNotFoundException)
             {
-                this.DialogMessage("hosts file not found!", "CRITICAL", 0);
+                this.DialogMessage("hosts file not found!", "CRITICAL", 1);
+            }
+            catch (System.IO.IOException e)
+            {
+                //this.DialogMessage("Hosts file is being used by another application. Try again later", "CRITICAL", 1);
+                this.DialogMessage(e.ToString(), "CRITICAL", 1);
             }
 
         }
@@ -772,7 +749,7 @@ namespace Redirects
                         }
                     });
                     this.redirectsLoaded = true;
-                    this.DialogMessage("URLs added! Ready to start testing!", "INFO MESSAGE", 0);
+                    //this.DialogMessage("URLs added! Ready to start testing!", "INFO MESSAGE", 0);
                     this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
                     {
                         this.FillGrid();

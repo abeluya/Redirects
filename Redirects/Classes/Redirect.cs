@@ -22,18 +22,18 @@ namespace Redirects
         public string Origin
         {
             get { return this.origin; }
-            set { this.origin = value; }
+            set { this.origin = this.TrimUrl(value); }
 
         }
         public string Destiny
         {
             get { return this.destiny; }
-            set { this.destiny = value; }
+            set { this.destiny = this.TrimUrl(value); }
         }
         public string ServerDestiny
         {
             get { return this.serverDestiny; }
-            set { this.serverDestiny = value; }
+            set { this.serverDestiny = this.TrimUrl(value); }  
         }
 
 
@@ -60,6 +60,18 @@ namespace Redirects
         public Redirect()
         {
 
+        }
+
+        private string TrimUrl(string url)
+        {
+            char last = url[url.Length - 1];
+            if (last == '/') //Verifies if the URL ends with a dash
+            {
+                url = url.Substring(0, url.Length-1);
+            }
+
+            Console.WriteLine(url);
+            return url;
         }
     }
 
