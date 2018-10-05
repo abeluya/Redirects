@@ -115,7 +115,7 @@ namespace Redirects
                                     line[1] = line[1].Insert(4, "s");
                                 }
                             }
-                            this.list.Add(new Redirect(line[0], line[1]));
+                            this.list.Add(new Redirect(line[0].Trim(), line[1].Trim()));
 
                         }
 
@@ -338,13 +338,36 @@ namespace Redirects
             try
             {
                 Console.WriteLine(this.config.HostsPath);
-                using (StreamWriter stream = new StreamWriter(this.config.HostsPath, true, Encoding.Default))
+                /*using (StreamWriter stream = new StreamWriter(this.config.HostsPath, true, Encoding.Default))
                 {
-                    //stream.WriteLine(System.Environment.NewLine + this.txtIp.Text + " " + this.txtUrl.Text);
-                    stream.Write(System.Environment.NewLine + this.txtIp.Text + " " + this.txtUrl.Text);
+                    stream.WriteLine(System.Environment.NewLine + this.txtIp.Text + " " + this.txtUrl.Text);
+                    //stream.Write(System.Environment.NewLine + this.txtIp.Text + " " + this.txtUrl.Text);
+                    stream.Close();
+                }*/
+                
+
+                string[] lines = System.IO.File.ReadAllLines(this.config.HostsPath);
+                foreach (string linea in lines)
+                {
+                    Console.WriteLine(linea);
+                }
+
+                if (lines[lines.Count() - 1].Equals("", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Array.Resize(ref lines, lines.Count() - 1);
+                }
+                using (StreamWriter stream = new StreamWriter(this.config.HostsPath + "back", true, Encoding.Default))
+                {
+                    foreach (string line in lines)
+                    {
+                        stream.WriteLine(line);
+                    }
+                    stream.WriteLine(this.txtIp.Text + " " + this.txtUrl.Text);
                     stream.Close();
                 }
+                File.Replace(this.config.HostsPath + "back", this.config.HostsPath, null);
                 return true;
+
             }
             catch (System.IO.IOException e)
             {
@@ -387,19 +410,23 @@ namespace Redirects
 
             try
             {
-                using (StreamWriter stream = new StreamWriter(this.config.HostsPath, true, Encoding.Default))
-                {
-                    Console.WriteLine(this.config.HostsPath);
-                    List<string> lines = File.ReadAllLines(this.config.HostsPath).ToList();
-                    File.WriteAllLines(this.config.HostsPath, lines.GetRange(0, lines.Count - 1).ToArray()); //Delete last line of file
-                    string myFileData = File.ReadAllText(this.config.HostsPath);
-                    if (myFileData.EndsWith(Environment.NewLine)) //Delete break line at the end of file
+                    string[] lines = System.IO.File.ReadAllLines(this.config.HostsPath);
+                    foreach (string linea in lines)
                     {
-                        File.WriteAllText(this.config.HostsPath, myFileData.TrimEnd(Environment.NewLine.ToCharArray()));
+                        Console.WriteLine(linea);
                     }
-                    Console.WriteLine(this.config.HostsPath);
-
-                }   
+                    using (StreamWriter stream = new StreamWriter(this.config.HostsPath+"back", true, Encoding.Default))
+                    {
+                        foreach (string line in lines)
+                        {
+                            if (!line.Equals(this.txtIp.Text + " " + this.txtUrl.Text, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                stream.WriteLine(line);
+                            }
+                        }
+                        stream.Close();
+                    }
+                    File.Replace(this.config.HostsPath + "back", this.config.HostsPath, null);
             }
             
             catch (System.IO.FileNotFoundException)
@@ -835,12 +862,13 @@ namespace Redirects
             this.GetResponse();
             this.SeleniumChromeCheck();
             //this.CompareURL();
-            if (!this.chkLive.Checked)
-            {
-                this.DeleteLastLine();
-            }
             this.Invoke((MethodInvoker)delegate () //GUI handler outside GUI's Thread
             {
+                if (!this.chkLive.Checked)
+                {
+                    this.DeleteLastLine();
+                }
+                else;
                 this.loading.lblStatus.Text = "Done!";
             });
 
